@@ -1,10 +1,13 @@
 import tkinter as tk
 import random
 
+personas = []
+numeropersonas = 20
+
 class Persona:
     def __init__(self):
-        self.posx = random.randint(0,350) #posicion 350 es la mitad del lienzo
-        self.posy = random.randint(0,350)
+        self.posx = random.randint(0,700) #posicion entre 0 y 700
+        self.posy = random.randint(0,700)
         self.radio = 20
     def dibuja(self):
         lienzo.create_oval(
@@ -20,7 +23,10 @@ ventana = tk.Tk()
 lienzo = tk.Canvas(width=700,height=700)
 lienzo.pack()
 
-persona = Persona()
-persona.dibuja()
+for i in range (0, numeropersonas):
+    personas.append(Persona())
+
+for persona in personas:
+    persona.dibuja()
 
 ventana.mainloop()
