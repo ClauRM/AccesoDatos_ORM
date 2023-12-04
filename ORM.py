@@ -5,7 +5,7 @@ import json
 
 #Lista y numero de personas
 personas = []
-numeropersonas = 20
+numeropersonas = 5
 
 #Clase persona y metodos
 class Persona:
@@ -15,7 +15,7 @@ class Persona:
         self.posy = random.randint(0,700)
         self.radio = 20
         self.direccion = random.randint(0,360)#angulo en radianes
-        self.color = "blue"
+        self.color = "#{:06x}".format(random.randint(0,0xFFFFFF))# color aleatorio hexadecimal
         self.entidad = ""
     #metodo dibujar personas
     def dibuja(self):
@@ -41,8 +41,9 @@ class Persona:
         if self.posx < 0 or self.posx > 700 or self.posy < 0 or self.posy > 700:
             self.direccion+=math.pi #si alguna posicion toca la pared cambia de sentido 180grados
 #====================================
+
 def guardarPersonas():
-    print("Datos que de deben guardar")
+    print("Datos a guardar:")
     #guardar las variables de persona para cada persona
     cadena = json.dumps([vars(persona) for persona in personas])
     print(cadena)
@@ -58,14 +59,29 @@ lienzo = tk.Canvas(width=700,height=700)
 lienzo.pack()
 
 #Boton GUARDAR
-boton = tk.Button(ventana, text="Guardar", command = guardarPersonas)
-boton.pack()
+botonGuardar = tk.Button(ventana, text="Guardar", command = guardarPersonas)
+botonGuardar.pack()
 
-#Instanciar persona y agragarla a la lista
-for i in range (0, numeropersonas):
-    personas.append(Persona())
+#Cargar personas desde fichero
+try:
+    carga = open("jugadores.json",'r')
+    cargado = carga.read()
+    cargadoLista = json.loads(cargado)
 
-#Recorrer lista y dibujar personas
+    for elemento in cargadoLista:
+        persona = Persona()
+        persona.__dict__.update(elemento)
+        personas.append(persona)
+except:
+    print("No existe el fichero")
+
+#Recorrer lista y crear personas
+if len(personas) == 0: #si la lista esta vacia, crea personas
+    numeropersonas = 5
+    for i in range (0,numeropersonas):
+        personas.append(Persona())
+
+#Dibujar en el lienzo a cada persona de la lista personas
 for persona in personas:
     persona.dibuja()
 
@@ -73,7 +89,7 @@ for persona in personas:
 def bucle():
     for persona in personas:
         persona.mueve()
-    ventana.after(100,bucle) #en 1seg=1000 ejecutar de nuevo el bucle mover a las personas
+    ventana.after(10,bucle) #en 1seg=1000 ejecutar de nuevo el bucle mover a las personas
 
 #Ejecutar bucle
 bucle()
