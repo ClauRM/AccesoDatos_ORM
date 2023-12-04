@@ -1,6 +1,7 @@
 import tkinter as tk
 import random
 import math
+import json
 
 #Lista y numero de personas
 personas = []
@@ -39,6 +40,15 @@ class Persona:
     def colisiona(self):
         if self.posx < 0 or self.posx > 700 or self.posy < 0 or self.posy > 700:
             self.direccion+=math.pi #si alguna posicion toca la pared cambia de sentido 180grados
+#====================================
+def guardarPersonas():
+    print("Datos que de deben guardar")
+    #guardar las variables de persona para cada persona
+    cadena = json.dumps([vars(persona) for persona in personas])
+    print(cadena)
+    #gaurdarlo en fichero
+    archivo = open("jugadores.json",'w')
+    archivo.write(cadena)
 
 #Ventana
 ventana = tk.Tk()
@@ -46,6 +56,10 @@ ventana = tk.Tk()
 #Agregar lienzo a la ventana
 lienzo = tk.Canvas(width=700,height=700)
 lienzo.pack()
+
+#Boton GUARDAR
+boton = tk.Button(ventana, text="Guardar", command = guardarPersonas)
+boton.pack()
 
 #Instanciar persona y agragarla a la lista
 for i in range (0, numeropersonas):
