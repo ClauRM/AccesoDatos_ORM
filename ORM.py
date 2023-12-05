@@ -15,7 +15,7 @@ class Persona:
         self.posy = random.randint(0,700)
         self.radio = 20
         self.direccion = random.randint(0,360)#angulo en radianes
-        self.color = "#{:06x}".format(random.randint(0,0xFFFFFF))# color aleatorio hexadecimal
+        self.color = "#{:06x}".format(random.randint(0,0xFFFFFF))
         self.entidad = ""
     #metodo dibujar personas
     def dibuja(self):
@@ -39,7 +39,7 @@ class Persona:
     #metodo colisionar cuando toquen las paredes
     def colisiona(self):
         if self.posx < 0 or self.posx > 700 or self.posy < 0 or self.posy > 700:
-            self.direccion+=math.pi #si alguna posicion toca la pared cambia de sentido 180grados
+            self.direccion+=180 #si alguna posicion toca la pared cambia de sentido 180grados
 #====================================
 
 def guardarPersonas():
@@ -47,7 +47,7 @@ def guardarPersonas():
     #guardar las variables de persona para cada persona
     cadena = json.dumps([vars(persona) for persona in personas])
     print(cadena)
-    #gaurdarlo en fichero
+    #guardarlo en fichero
     archivo = open("jugadores.json",'w')
     archivo.write(cadena)
 
@@ -89,7 +89,7 @@ for persona in personas:
 def bucle():
     for persona in personas:
         persona.mueve()
-    ventana.after(10,bucle) #en 1seg=1000 ejecutar de nuevo el bucle mover a las personas
+    ventana.after(5,bucle) #en 1seg=1000 ejecutar de nuevo el bucle mover a las personas
 
 #Ejecutar bucle
 bucle()
