@@ -18,20 +18,46 @@ class Persona:
         self.direccion = random.randint(0,360)#angulo en radianes
         self.color = "#{:06x}".format(random.randint(0,0xFFFFFF))
         self.entidad = ""
+        self.energia = 100
+        self.descanso = 100
+        self.entidadenergia = ""
+        self.entidaddescanso = ""
     #metodo dibujar personas
     def dibuja(self):
+        #dibujar a la persona como un circulo
         self.entidad = lienzo.create_oval(
             self.posx-self.radio/2,
             self.posy-self.radio/2,
             self.posx+self.radio/2,
             self.posy+self.radio/2,
             fill=self.color)
-            #para centrar el ovalo en el lienzo
+        #dibujar su barra de energia como un rectangulo
+        self.entidadenergia = lienzo.create_rectangle(
+            self.posx-self.radio/2,
+            self.posy-self.radio/2-10,
+            self.posx+self.radio/2,
+            self.posy-self.radio/2-7,
+            fill="green")
+        #dibujar su barra de descanso como un rectangulo
+        self.entidaddescanso = lienzo.create_rectangle(
+            self.posx-self.radio/2,
+            self.posy-self.radio/2-17,
+            self.posx+self.radio/2,
+            self.posy-self.radio/2-14,
+            fill="green")
     #metodo mover personas
     def mueve(self):
         self.colisiona()#llama al metodo para que tenga en cuenta las paredes
         #mover la entidad de posicion(entidad, posicion en x, posicion en y)
         lienzo.move(self.entidad,
+                    math.cos(self.direccion),
+                    math.sin(self.direccion))
+        #mover la barra de energia
+        lienzo.move(self.entidaddescanso,
+                    math.cos(self.direccion),
+                    math.sin(self.direccion))
+        #mover la barra de descanso
+        lienzo.move(self.entidadenergia,
                     math.cos(self.direccion),
                     math.sin(self.direccion))
         #actualiza las posiciones
@@ -70,8 +96,8 @@ botonGuardar.pack()
 try:
     conexion = sqlite3.connect("jugadores.sqlite3") 
     cursor = conexion.cursor()
-    ##    cursor.execute('SELECT * FROM jugadores')
-    cursor.execute('SELECT * FROM jugadores WHERE posx <100') #utilizando condiciones
+    cursor.execute('SELECT * FROM jugadores')
+    ##    cursor.execute('SELECT * FROM jugadores WHERE posx <100') #utilizando condiciones
     while True: #recorrer el resultado
         fila = cursor.fetchone()
         if fila is None:
