@@ -64,34 +64,27 @@ lienzo.pack()
 botonGuardar = tk.Button(ventana, text="Guardar", command = guardarPersonas)
 botonGuardar.pack()
 
-#Cargar personas desde fichero
-try:
-    carga = open("jugadores.json",'r')
-    cargado = carga.read()
-    cargadoLista = json.loads(cargado)
-
-    for elemento in cargadoLista:
-        persona = Persona()
-        persona.__dict__.update(elemento)
-        personas.append(persona)
-except:
-    print("No existe el fichero")
-
 #Cargar personas desde sql
-conexion = sqlite3.connect("jugadores.sqlite3") 
-cursor = conexion.cursor()
-cursor.execute('SELECT * FROM jugadores')
-while True: #recorrer el resultado
-    fila = cursor.fetchone()
-    if fila is None:
-        break
-    print(fila)
-conexion.close()
-
-
-
-
-
+try:
+    conexion = sqlite3.connect("jugadores.sqlite3") 
+    cursor = conexion.cursor()
+    cursor.execute('SELECT * FROM jugadores')
+    while True: #recorrer el resultado
+        fila = cursor.fetchone()
+        if fila is None:
+            break
+        #por cada fila, crear persona , tomar los valores del resultado y sumarlo al listado 
+        persona = Persona()
+        persona.posx = fila[1]
+        persona.posy = fila[2]
+        persona.radio = fila[3]
+        persona.direccion = fila[4]
+        persona.color = fila[5]
+        persona.entidad = fila[6]
+        personas.append(persona)
+    conexion.close()
+except:
+    print("Error al leer la base de datos")
 
 #Recorrer lista y crear personas
 if len(personas) == 0: #si la lista esta vacia, crea personas
