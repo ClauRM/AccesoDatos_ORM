@@ -68,7 +68,8 @@ botonGuardar.pack()
 try:
     conexion = sqlite3.connect("jugadores.sqlite3") 
     cursor = conexion.cursor()
-    cursor.execute('SELECT * FROM jugadores')
+    ##    cursor.execute('SELECT * FROM jugadores')
+    cursor.execute('SELECT * FROM jugadores WHERE posx <100') #utilizando condiciones
     while True: #recorrer el resultado
         fila = cursor.fetchone()
         if fila is None:
