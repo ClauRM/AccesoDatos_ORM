@@ -47,19 +47,31 @@ class Persona:
             fill="green")
     #metodo mover personas
     def mueve(self):
-        self.colisiona()#llama al metodo para que tenga en cuenta las paredes
+        #restar energia y descanso en cada movimiento
+        if self.energia >0:
+            self.energia -= 0.1
+        if self.descanso >0:
+            self.descanso -= 0.1
+        #con cada movimiento verificar si esta en la pared para chocar
+        self.colisiona()
         #mover la entidad de posicion(entidad, posicion en x, posicion en y)
         lienzo.move(self.entidad,
                     math.cos(self.direccion),
                     math.sin(self.direccion))
-        #mover la barra de energia
-        lienzo.move(self.entidaddescanso,
-                    math.cos(self.direccion),
-                    math.sin(self.direccion))
+        #mover la barra de energia e ir disminuyendo
+        anchuraenergia = (self.energia/100)*self.radio
+        lienzo.coords(self.entidadenergia,
+                    self.posx-self.radio/2,
+                    self.posy-self.radio/2-10,
+                    self.posx-self.radio/2+anchuraenergia,
+                    self.posy-self.radio/2-7)
         #mover la barra de descanso
-        lienzo.move(self.entidadenergia,
-                    math.cos(self.direccion),
-                    math.sin(self.direccion))
+        anchuradescanso = (self.energia/100)*self.radio
+        lienzo.coords(self.entidaddescanso,
+                    self.posx-self.radio/2,
+                    self.posy-self.radio/2-17,
+                    self.posx-self.radio/2+anchuradescanso,
+                    self.posy-self.radio/2-14)
         #actualiza las posiciones
         self.posx += math.cos(self.direccion)
         self.posy += math.sin(self.direccion)
