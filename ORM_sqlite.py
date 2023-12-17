@@ -7,6 +7,7 @@ import sqlite3
 #Declaracion de variables globales
 personas = []
 numeropersonas = 5
+roles = ["TRIPULANTE","IMPOSTOR","DETECTIVE"]
 
 #Clase persona y metodos
 class Persona:
@@ -22,6 +23,8 @@ class Persona:
         self.descanso = 100
         self.entidadenergia = ""
         self.entidaddescanso = ""
+        self.rol = random.choice(roles)
+        self.etiquetarol = ""
     #metodo dibujar personas
     def dibuja(self):
         #dibujar a la persona como un circulo
@@ -35,8 +38,8 @@ class Persona:
         self.entidadenergia = lienzo.create_rectangle(
             self.posx-self.radio/2,
             self.posy-self.radio/2-10,
-            self.posx+self.radio/2,
-            self.posy-self.radio/2-7,
+            self.posx+self.radio,
+            self.posy-self.radio-7,
             fill="green")
         #dibujar su barra de descanso como un rectangulo
         self.entidaddescanso = lienzo.create_rectangle(
@@ -44,7 +47,14 @@ class Persona:
             self.posy-self.radio/2-17,
             self.posx+self.radio/2,
             self.posy-self.radio/2-14,
-            fill="green")
+            fill="blue")
+        #dibujar el rol
+        self.etiquetarol = lienzo.create_text(
+            (self.posx, self.posy),
+            text=self.rol,
+            fill="blue",
+            font='tkDefaeultFont 8'
+            )
     #metodo mover personas
     def mueve(self):
         #restar energia y descanso en cada movimiento
@@ -66,12 +76,16 @@ class Persona:
                     self.posx-self.radio/2+anchuraenergia,
                     self.posy-self.radio/2-7)
         #mover la barra de descanso
-        anchuradescanso = (self.energia/100)*self.radio
+        anchuradescanso = (self.descanso/100)*self.radio
         lienzo.coords(self.entidaddescanso,
                     self.posx-self.radio/2,
                     self.posy-self.radio/2-17,
                     self.posx-self.radio/2+anchuradescanso,
                     self.posy-self.radio/2-14)
+        #mover el rotulo del rol
+        lienzo.coords(self.etiquetarol,
+                      self.posx,
+                      self.posy+30)
         #actualiza las posiciones
         self.posx += math.cos(self.direccion)
         self.posy += math.sin(self.direccion)
@@ -89,7 +103,7 @@ def guardarPersonas():
     cursor.execute('DELETE FROM jugadores')
     conexion.commit()
     for persona in personas:
-        cursor.execute('INSERT INTO jugadores VALUES (NULL,'+str(persona.posx)+','+str(persona.posy)+','+str(persona.radio)+','+str(persona.direccion)+',"'+str(persona.color)+'","'+str(persona.entidad)+'",'+str(persona.energia)+','+str(persona.descanso)+',"'+str(persona.entidadenergia)+'","'+str(persona.entidaddescanso)+'")')
+        cursor.execute('INSERT INTO jugadores VALUES (NULL,'+str(persona.posx)+','+str(persona.posy)+','+str(persona.radio)+','+str(persona.direccion)+',"'+str(persona.color)+'","'+str(persona.entidad)+'",'+str(persona.energia)+','+str(persona.descanso)+',"'+str(persona.entidadenergia)+'","'+str(persona.entidaddescanso)+'","'+str(persona.rol)+'")')
     conexion.commit()
     conexion.close()
 
@@ -126,6 +140,7 @@ try:
         persona.descanso = fila[8]
         persona.entidadenergia = fila[9]
         persona.entidaddescanso = fila[10]
+        persona.rol = fila[11]
         personas.append(persona)
     conexion.close()
 except:
