@@ -107,6 +107,22 @@ def guardarPersonas():
     conexion.commit()
     conexion.close()
 
+def nuevoJuego():
+    #Limpiar canvas
+    lienzo.delete("all")
+    #Vaciar la lista y crear nuevas personas
+    personas.clear() 
+    numeropersonas = 5
+    for i in range (0,numeropersonas):
+        personas.append(Persona())
+
+    #Dibujar en el lienzo a cada persona de la lista personas
+    for persona in personas:
+        persona.dibuja()
+
+def salirJuego():
+    ventana.destroy()
+
 #Ventana
 ventana = tk.Tk()
 
@@ -118,12 +134,20 @@ lienzo.pack()
 botonGuardar = tk.Button(ventana, text="Guardar", command = guardarPersonas)
 botonGuardar.pack()
 
+#Boton NUEVO
+botonGuardar = tk.Button(ventana, text="Nuevo", command = nuevoJuego)
+botonGuardar.pack()
+
+#Boton SALIR
+botonGuardar = tk.Button(ventana, text="Salir", command = salirJuego)
+botonGuardar.pack()
+
 #Cargar personas desde sql
 try:
     conexion = sqlite3.connect("jugadores.sqlite3") 
     cursor = conexion.cursor()
     cursor.execute('SELECT * FROM jugadores')
-    ##    cursor.execute('SELECT * FROM jugadores WHERE posx <100') #utilizando condiciones
+    ##    cursor.execute('SELECT * FROM jugadores WHERE rol="IMPOSTOR"') #utilizando condiciones
     while True: #recorrer el resultado
         fila = cursor.fetchone()
         if fila is None:
