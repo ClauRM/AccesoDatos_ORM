@@ -89,7 +89,7 @@ def guardarPersonas():
     cursor.execute('DELETE FROM jugadores')
     conexion.commit()
     for persona in personas:
-        cursor.execute('INSERT INTO jugadores VALUES (NULL,'+str(persona.posx)+','+str(persona.posy)+','+str(persona.radio)+','+str(persona.direccion)+',"'+str(persona.color)+'","'+str(persona.entidad)+'")')
+        cursor.execute('INSERT INTO jugadores VALUES (NULL,'+str(persona.posx)+','+str(persona.posy)+','+str(persona.radio)+','+str(persona.direccion)+',"'+str(persona.color)+'","'+str(persona.entidad)+'",'+str(persona.energia)+','+str(persona.descanso)+',"'+str(persona.entidadenergia)+'","'+str(persona.entidaddescanso)+'")')
     conexion.commit()
     conexion.close()
 
@@ -122,6 +122,10 @@ try:
         persona.direccion = fila[4]
         persona.color = fila[5]
         persona.entidad = fila[6]
+        persona.energia = fila[7]
+        persona.descanso = fila[8]
+        persona.entidadenergia = fila[9]
+        persona.entidaddescanso = fila[10]
         personas.append(persona)
     conexion.close()
 except:
