@@ -48,6 +48,8 @@ def guardarPersonas():
     #guardar las personas en sql
     conexion = sqlite3.connect("jugadores.sqlite3") 
     cursor = conexion.cursor()
+    cursor.execute('DELETE FROM jugadores')
+    conexion.commit()
     for persona in personas:
         cursor.execute('INSERT INTO jugadores VALUES (NULL,'+str(persona.posx)+','+str(persona.posy)+','+str(persona.radio)+','+str(persona.direccion)+',"'+str(persona.color)+'","'+str(persona.entidad)+'")')
     conexion.commit()
