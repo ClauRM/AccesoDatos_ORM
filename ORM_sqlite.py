@@ -25,6 +25,7 @@ class Persona:
         self.entidaddescanso = ""
         self.rol = random.choice(roles)
         self.etiquetarol = ""
+        self.inventario = [1,2,3,4]
     #metodo dibujar personas
     def dibuja(self):
         #dibujar a la persona como un circulo
@@ -97,6 +98,10 @@ class Persona:
 
 def guardarPersonas():
     print("Los datos se guardan en la bd jugadores.sqlite3")
+    #guardar coleccion en json
+    cadena = json.dumps([vars(persona) for persona in personas]) #creo la cadena texto
+    archivo = open("jugadores.json",'w') #abro archivo modo escritura
+    archivo.write(cadena) #escribo cadena en el archivo
     #guardar las personas en sql
     conexion = sqlite3.connect("jugadores.sqlite3") 
     cursor = conexion.cursor()
