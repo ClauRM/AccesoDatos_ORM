@@ -9,15 +9,24 @@ personas = []
 numeropersonas = 5
 roles = ["TRIPULANTE","IMPOSTOR","DETECTIVE"]
 
-#Clase persona y metodos
-class Persona:
-    #constructor
+#Clase Recogible (objeto)
+class Entidad:
     def __init__(self):
         self.posx = random.randint(0,700) #posicion entre 0 y ancho de ventana
         self.posy = random.randint(0,700)
+        self.color = "#{:06x}".format(random.randint(0,0xFFFFFF))
+
+#Clase Recogible (extiende de Entidad)
+class Recogible (Entidad):
+    def __init__(self):
+        pass
+        
+#Clase persona y metodos
+class Persona (Entidad):
+    #constructor
+    def __init__(self):
         self.radio = 20
         self.direccion = random.randint(0,360)#angulo en radianes
-        self.color = "#{:06x}".format(random.randint(0,0xFFFFFF))
         self.entidad = ""
         self.energia = 100
         self.descanso = 100
@@ -25,7 +34,8 @@ class Persona:
         self.entidaddescanso = ""
         self.rol = random.choice(roles)
         self.etiquetarol = ""
-        self.inventario = [1,2,3,4]
+        self.inventario = []
+        self.inventario.append(Recogible())
     #metodo dibujar personas
     def dibuja(self):
         #dibujar a la persona como un circulo
@@ -108,7 +118,7 @@ def guardarPersonas():
     cursor.execute('DELETE FROM jugadores')
     conexion.commit()
     for persona in personas:
-        cursor.execute('INSERT INTO jugadores VALUES (NULL,'+str(persona.posx)+','+str(persona.posy)+','+str(persona.radio)+','+str(persona.direccion)+',"'+str(persona.color)+'","'+str(persona.entidad)+'",'+str(persona.energia)+','+str(persona.descanso)+',"'+str(persona.entidadenergia)+'","'+str(persona.entidaddescanso)+'","'+str(persona.rol)+'")')
+        cursor.execute('INSERT INTO jugadores VALUES (NULL,'+str(persona.posx)+','+str(persona.posy)+','+str(persona.radio)+','+str(persona.direccion)+',"'+str(persona.color)+'","'+str(persona.entidad)+'",'+str(persona.energia)+','+str(persona.descanso)+',"'+str(persona.entidadenergia)+'","'+str(persona.entidaddescanso)+'","'+str(persona.rol)+'","'+str(persona.inventario)+'")')
     conexion.commit()
     conexion.close()
 
