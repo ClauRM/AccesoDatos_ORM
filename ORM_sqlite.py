@@ -134,22 +134,24 @@ class Persona(): #Persona extends Entidad
 def guardarPersonas():
     #guardar con fines demostrativos
     personas_serializadas = [persona.serializar() for persona in personas]
-    print("Datos a guardar en json:")
+    print("Los datos se guardan en jugadores.json")
     # cadena = json.dumps(personas_serializadas) #crear la cadena persona para cada persona
     # print(cadena)
     # archivo = open("jugadores.json",'w')#abrir archivo
     # archivo.write(cadena)#guardar cadena en archivo
     with open("jugadores.json","w") as archivo: #abrir archivo
         json.dump(personas_serializadas,archivo,indent=4)#almacenar personas serializadas en archivo
-
     print("Los datos se guardan en la bd jugadores.sqlite3")
     #guardar las personas en sql
     conexion = sqlite3.connect("jugadores.sqlite3") 
     cursor = conexion.cursor()
     cursor.execute('DELETE FROM jugadores')
+    cursor.execute('DELETE FROM recogibles')
     conexion.commit()
     for persona in personas:
         cursor.execute('INSERT INTO jugadores VALUES (NULL,'+str(persona.posx)+','+str(persona.posy)+','+str(persona.radio)+','+str(persona.direccion)+',"'+str(persona.color)+'","'+str(persona.entidad)+'",'+str(persona.energia)+','+str(persona.descanso)+',"'+str(persona.entidadenergia)+'","'+str(persona.entidaddescanso)+'","'+str(persona.rol)+'","'+str(persona.inventario)+'")')
+        for recogible in persona.inventario:
+            cursor.execute('INSERT INTO recogibles VALUES (NULL,'+str(persona.entidad)+',"'+str(persona.posx)+'","'+str(persona.posy)+'","'+str(persona.color)+'")')
     conexion.commit()
     conexion.close()
 
