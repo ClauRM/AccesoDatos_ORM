@@ -3,28 +3,39 @@ import random
 import math
 import json
 import sqlite3
-
 #Declaracion de variables globales
 personas = []
 numeropersonas = 5
 roles = ["TRIPULANTE","IMPOSTOR","DETECTIVE"]
 
-#Clase Recogible (objeto)
-class Entidad:
+#Case entidad
+# class Entidad:
+#     def __init__(self):#constructor
+#         self.posx = random.randint(0,700) #posicion entre 0 y ancho de ventana
+#         self.posy = random.randint(0,700)
+#         self.color = "#{:06x}".format(random.randint(0,0xFFFFFF))
+
+#Case recogible
+class Recogible(): #Recogible extends Entidad
     def __init__(self):
         self.posx = random.randint(0,700) #posicion entre 0 y ancho de ventana
         self.posy = random.randint(0,700)
         self.color = "#{:06x}".format(random.randint(0,0xFFFFFF))
+    #metodo para crear objetos dentro de objetos (json)
+    def serializar(self): 
+        recogible_serializado ={
+            "posx":self.posx,
+            "posy":self.posy,
+            "color":self.color
+            }
+        return recogible_serializado
 
-#Clase Recogible (extiende de Entidad)
-class Recogible (Entidad):
-    def __init__(self):
-        pass
-        
 #Clase persona y metodos
-class Persona (Entidad):
-    #constructor
+class Persona(): #Persona extends Entidad
     def __init__(self):
+        self.posx = random.randint(0,700) #posicion entre 0 y ancho de ventana
+        self.posy = random.randint(0,700)
+        self.color = "#{:06x}".format(random.randint(0,0xFFFFFF))
         self.radio = 20
         self.direccion = random.randint(0,360)#angulo en radianes
         self.entidad = ""
@@ -35,7 +46,7 @@ class Persona (Entidad):
         self.rol = random.choice(roles)
         self.etiquetarol = ""
         self.inventario = []
-        self.inventario.append(Recogible())
+        self.inventario.append(Recogible()) #new Recogible
     #metodo dibujar personas
     def dibuja(self):
         #dibujar a la persona como un circulo
@@ -104,14 +115,31 @@ class Persona (Entidad):
     def colisiona(self):
         if self.posx < 0 or self.posx > 700 or self.posy < 0 or self.posy > 700:
             self.direccion+=180 #si alguna posicion toca la pared cambia de sentido 180grados
+    #metodo para crear objetos dentro de objetos (json)
+    def serializar(self):
+        persona_serializada ={
+            "posx":self.posx,
+            "posy":self.posy,
+            "radio":self.radio,
+            "direccion":self.direccion,
+            "color":self.color,
+            "energia":self.energia,
+            "descanso":self.descanso,
+            "rol":self.rol,
+            "inventario":[item.serializar() for item in self.inventario]
+            }
+        return persona_serializada
 #====================================
-
 def guardarPersonas():
+    #guardar con fines demostrativos
+    personas_serializadas = [persona.serializar() for persona in personas]
+    print("Datos a guardar en json:")
+    cadena = json.dumps(personas_serializadas) #crear la cadena persona para cada persona
+    print(cadena)
+    archivo = open("jugadores.json",'w')#abrir archivo
+    archivo.write(cadena)#guardar cadena en archivo
+
     print("Los datos se guardan en la bd jugadores.sqlite3")
-    #guardar coleccion en json
-    cadena = json.dumps([vars(persona) for persona in personas]) #creo la cadena texto
-    archivo = open("jugadores.json",'w') #abro archivo modo escritura
-    archivo.write(cadena) #escribo cadena en el archivo
     #guardar las personas en sql
     conexion = sqlite3.connect("jugadores.sqlite3") 
     cursor = conexion.cursor()
@@ -144,7 +172,6 @@ ventana = tk.Tk()
 #Agregar lienzo a la ventana
 lienzo = tk.Canvas(width=700,height=700)
 lienzo.pack()
-
 #Boton GUARDAR
 botonGuardar = tk.Button(ventana, text="Guardar", command = guardarPersonas)
 botonGuardar.pack()
@@ -162,6 +189,7 @@ try:
     conexion = sqlite3.connect("jugadores.sqlite3") 
     cursor = conexion.cursor()
     cursor.execute('SELECT * FROM jugadores')
+    ##    cursor.execute('SELECT * FROM jugadores WHERE posx <100') #utilizando condiciones
     ##    cursor.execute('SELECT * FROM jugadores WHERE rol="IMPOSTOR"') #utilizando condiciones
     while True: #recorrer el resultado
         fila = cursor.fetchone()
@@ -184,24 +212,19 @@ try:
     conexion.close()
 except:
     print("Error al leer la base de datos")
-
 #Recorrer lista y crear personas
 if len(personas) == 0: #si la lista esta vacia, crea personas
     numeropersonas = 5
     for i in range (0,numeropersonas):
         personas.append(Persona())
-
 #Dibujar en el lienzo a cada persona de la lista personas
 for persona in personas:
     persona.dibuja()
-
 #Definir metodo bucle para mover a las personas
 def bucle():
     for persona in personas:
         persona.mueve()
     ventana.after(5,bucle) #en 1seg=1000 ejecutar de nuevo el bucle mover a las personas
-
 #Ejecutar bucle
 bucle()
-
 ventana.mainloop() #Empaquetar 
