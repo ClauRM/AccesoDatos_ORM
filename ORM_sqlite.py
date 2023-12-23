@@ -46,7 +46,8 @@ class Persona(): #Persona extends Entidad
         self.rol = random.choice(roles)
         self.etiquetarol = ""
         self.inventario = []
-        self.inventario.append(Recogible()) #new Recogible
+        for i in range (0,5):
+            self.inventario.append(Recogible()) #new Recogible
     #metodo dibujar personas
     def dibuja(self):
         #dibujar a la persona como un circulo
