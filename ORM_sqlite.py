@@ -8,13 +8,6 @@ personas = []
 numeropersonas = 5
 roles = ["TRIPULANTE","IMPOSTOR","DETECTIVE"]
 
-#Case entidad
-# class Entidad:
-#     def __init__(self):#constructor
-#         self.posx = random.randint(0,700) #posicion entre 0 y ancho de ventana
-#         self.posy = random.randint(0,700)
-#         self.color = "#{:06x}".format(random.randint(0,0xFFFFFF))
-
 #Case recogible
 class Recogible(): #Recogible extends Entidad
     def __init__(self):
@@ -132,17 +125,13 @@ class Persona(): #Persona extends Entidad
         return persona_serializada
 #====================================
 def guardarPersonas():
-    #guardar con fines demostrativos
+    #guardar las personas en json
     personas_serializadas = [persona.serializar() for persona in personas]
     print("Los datos se guardan en jugadores.json")
-    # cadena = json.dumps(personas_serializadas) #crear la cadena persona para cada persona
-    # print(cadena)
-    # archivo = open("jugadores.json",'w')#abrir archivo
-    # archivo.write(cadena)#guardar cadena en archivo
     with open("jugadores.json","w") as archivo: #abrir archivo
         json.dump(personas_serializadas,archivo,indent=4)#almacenar personas serializadas en archivo
     print("Los datos se guardan en la bd jugadores.sqlite3")
-    #guardar las personas en sql
+    #guardar las personas y los recogibles en sql
     conexion = sqlite3.connect("jugadores.sqlite3") 
     cursor = conexion.cursor()
     cursor.execute('DELETE FROM jugadores')
@@ -177,17 +166,22 @@ ventana = tk.Tk()
 #Agregar lienzo a la ventana
 lienzo = tk.Canvas(width=700,height=700)
 lienzo.pack()
+
+#Contenedor (frame) de botones
+contenedor_botones = tk.Frame(ventana)
+contenedor_botones.pack(pady=10)
+
 #Boton GUARDAR
-botonGuardar = tk.Button(ventana, text="Guardar", command = guardarPersonas)
-botonGuardar.pack()
+botonGuardar = tk.Button(contenedor_botones, text="Guardar", command = guardarPersonas)
+botonGuardar.pack(side=tk.LEFT)
 
 #Boton NUEVO
-botonGuardar = tk.Button(ventana, text="Nuevo", command = nuevoJuego)
-botonGuardar.pack()
+botonNuevo = tk.Button(contenedor_botones, text="Nuevo", command = nuevoJuego)
+botonNuevo.pack(side=tk.LEFT)
 
 #Boton SALIR
-botonGuardar = tk.Button(ventana, text="Salir", command = salirJuego)
-botonGuardar.pack()
+botonSalir = tk.Button(contenedor_botones, text="Salir", command = salirJuego)
+botonSalir.pack(side=tk.LEFT)
 
 #Cargar personas desde sql
 try:
@@ -213,6 +207,18 @@ try:
         persona.entidadenergia = fila[9]
         persona.entidaddescanso = fila[10]
         persona.rol = fila[11]
+        #antes de aniadir los datos de la fila al objeto n, recorremos la segunda tabla
+        cursor2 = conexion.cursor()
+        cursor2.execute('SELECT * FROM recogibles')
+        while True:
+            fila2 = cursor2.fetchone()
+            if fila2 is None:
+                break
+            recogible = Recogible() #por cada fila del resultado, crear un recogible y setear sus propiedades
+            recogible.posx = fila[2]
+            recogible.posy = fila[3]
+            recogible.color = fila[4]
+            persona.inventario.append(recogible)
         personas.append(persona)
     conexion.close()
 except:
@@ -232,4 +238,5 @@ def bucle():
     ventana.after(5,bucle) #en 1seg=1000 ejecutar de nuevo el bucle mover a las personas
 #Ejecutar bucle
 bucle()
+
 ventana.mainloop() #Empaquetar 
