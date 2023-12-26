@@ -8,7 +8,21 @@ personas = []
 numeropersonas = 5
 roles = ["TRIPULANTE","IMPOSTOR","DETECTIVE"]
 
-#Case recogible
+#Clase logros desbloqueados
+class LogrosDesbloqueados:
+    def __init__(self):
+        self.logros = {}
+
+    def agregar_logro(self, nombre_logro, detalles_logro):
+        self.logros[nombre_logro] = detalles_logro
+
+    def serializar(self):
+        logros_serializados = {
+            "logros": self.logros
+        }
+        return logros_serializados
+
+#Clase recogible
 class Recogible(): #Recogible extends Entidad
     def __init__(self):
         self.posx = random.randint(0,700) #posicion entre 0 y ancho de ventana
@@ -39,8 +53,9 @@ class Persona(): #Persona extends Entidad
         self.rol = random.choice(roles)
         self.etiquetarol = ""
         self.inventario = []
-        for i in range (0,5):
+        for i in range (0,2):
             self.inventario.append(Recogible()) #new Recogible
+        self.logros = LogrosDesbloqueados() #objeto LogroDesbloqueado
     #metodo dibujar personas
     def dibuja(self):
         #dibujar a la persona como un circulo
@@ -69,7 +84,7 @@ class Persona(): #Persona extends Entidad
             (self.posx, self.posy),
             text=self.rol,
             fill="blue",
-            font='tkDefaeultFont 8'
+            font='tkDefaultFont 8'
             )
     #metodo mover personas
     def mueve(self):
@@ -120,7 +135,8 @@ class Persona(): #Persona extends Entidad
             "energia":self.energia,
             "descanso":self.descanso,
             "rol":self.rol,
-            "inventario":[item.serializar() for item in self.inventario]
+            "inventario":[item.serializar() for item in self.inventario],
+            "logros": self.logros.serializar() #Serializar los logros
             }
         return persona_serializada
 #====================================
@@ -138,9 +154,21 @@ def guardarPersonas():
     cursor.execute('DELETE FROM recogibles')
     conexion.commit()
     for persona in personas:
-        cursor.execute('INSERT INTO jugadores VALUES (NULL,'+str(persona.posx)+','+str(persona.posy)+','+str(persona.radio)+','+str(persona.direccion)+',"'+str(persona.color)+'","'+str(persona.entidad)+'",'+str(persona.energia)+','+str(persona.descanso)+',"'+str(persona.entidadenergia)+'","'+str(persona.entidaddescanso)+'","'+str(persona.rol)+'","'+str(persona.inventario)+'")')
+        # cursor.execute('INSERT INTO jugadores VALUES (NULL,'+str(persona.posx)+','+str(persona.posy)+','+str(persona.radio)+','+str(persona.direccion)+',"'+str(persona.color)+'","'+str(persona.entidad)+'",'+str(persona.energia)+','+str(persona.descanso)+',"'+str(persona.entidadenergia)+'","'+str(persona.entidaddescanso)+'","'+str(persona.rol)+'","'+str(persona.inventario)+'")')
+        cursor.execute('INSERT INTO jugadores VALUES (NULL,?,?,?,?,?,?,?,?,?,?,?,?,?)',
+                       (persona.posx, persona.posy, persona.radio, persona.direccion,
+                        str(persona.color), str(persona.entidad), persona.energia, persona.descanso,
+                        str(persona.entidadenergia),str(persona.entidaddescanso),
+                        str(persona.rol), str(persona.inventario), json.dumps(persona.logros.serializar()))) #Los logros se guardan como texto JSON 
         for recogible in persona.inventario:
-            cursor.execute('INSERT INTO recogibles VALUES (NULL,'+str(persona.entidad)+',"'+str(persona.posx)+'","'+str(persona.posy)+'","'+str(persona.color)+'")')
+            # cursor.execute('INSERT INTO recogibles VALUES (NULL,'+str(persona.entidad)+',"'+str(persona.posx)+'","'+str(persona.posy)+'","'+str(persona.color)+'")')
+            cursor.execute('INSERT INTO recogibles VALUES (NULL,?,?,?,?)',
+                           (persona.entidad, str(persona.posx), str(persona.posy),
+                            str(persona.color))) 
+        for logro in persona.logros:
+            cursor.execute('INSERT INTO logros VALUES (NULL,?,?,?)',
+                           (persona.entidad, str(persona.posx), str(persona.posy),
+                            str(persona.color)))
     conexion.commit()
     conexion.close()
 
@@ -151,7 +179,9 @@ def nuevoJuego():
     personas.clear() 
     numeropersonas = 5
     for i in range (0,numeropersonas):
-        personas.append(Persona())
+        persona = Persona()
+        persona.logros.agregar_logro("Primer Logro", "Has completado tu primera mision.")
+        personas.append(persona)
 
     #Dibujar en el lienzo a cada persona de la lista personas
     for persona in personas:
@@ -207,6 +237,7 @@ try:
         persona.entidadenergia = fila[9]
         persona.entidaddescanso = fila[10]
         persona.rol = fila[11]
+        persona.logros.logros = fila[13]
         #antes de aniadir los datos de la fila al objeto n, recorremos la segunda tabla
         cursor2 = conexion.cursor()
         cursor2.execute('SELECT * FROM recogibles')
