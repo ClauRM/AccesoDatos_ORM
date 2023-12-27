@@ -1,1 +1,137 @@
-[{"posx": 216.20981569952576, "posy": 283.37852502471003, "radio": 20, "direccion": 2026, "color": "#4499f4", "entidad": 1}, {"posx": 188.82179598043018, "posy": 483.64385406696437, "radio": 20, "direccion": 3185, "color": "#38e5c8", "entidad": 2}, {"posx": 467.5220602609741, "posy": 250.2296216535144, "radio": 20, "direccion": 3757, "color": "#8f4dd9", "entidad": 3}, {"posx": 176.57420588803677, "posy": 39.32286417055738, "radio": 20, "direccion": 5041, "color": "#45d4b9", "entidad": 4}, {"posx": 629.9315511737302, "posy": 32.77624823720614, "radio": 20, "direccion": 2592, "color": "#7293ff", "entidad": 5}]
+[
+    {
+        "posx": 378.2209634460458,
+        "posy": 523.6558253895269,
+        "radio": 20,
+        "direccion": 181,
+        "color": "#34735d",
+        "energia": 91.1000000000005,
+        "descanso": 91.1000000000005,
+        "rol": "IMPOSTOR",
+        "inventario": [
+            {
+                "posx": 103,
+                "posy": 464,
+                "color": "#b469be"
+            },
+            {
+                "posx": 422,
+                "posy": 320,
+                "color": "#d22639"
+            }
+        ],
+        "logros": {
+            "logros": {
+                "Primer Logro": "Has completado tu primera mision."
+            }
+        }
+    },
+    {
+        "posx": 638.611231623157,
+        "posy": 67.7316820435621,
+        "radio": 20,
+        "direccion": 36,
+        "color": "#8047f3",
+        "energia": 91.1000000000005,
+        "descanso": 91.1000000000005,
+        "rol": "IMPOSTOR",
+        "inventario": [
+            {
+                "posx": 456,
+                "posy": 556,
+                "color": "#6b85b3"
+            },
+            {
+                "posx": 296,
+                "posy": 499,
+                "color": "#0b7f6c"
+            }
+        ],
+        "logros": {
+            "logros": {
+                "Primer Logro": "Has completado tu primera mision."
+            }
+        }
+    },
+    {
+        "posx": 192.076709804827,
+        "posy": 234.3222515182203,
+        "radio": 20,
+        "direccion": 141,
+        "color": "#d47ace",
+        "energia": 91.1000000000005,
+        "descanso": 91.1000000000005,
+        "rol": "DETECTIVE",
+        "inventario": [
+            {
+                "posx": 462,
+                "posy": 355,
+                "color": "#e8f6d1"
+            },
+            {
+                "posx": 278,
+                "posy": 64,
+                "color": "#897a96"
+            }
+        ],
+        "logros": {
+            "logros": {
+                "Primer Logro": "Has completado tu primera mision."
+            }
+        }
+    },
+    {
+        "posx": 377.6515802075821,
+        "posy": 689.8674854113929,
+        "radio": 20,
+        "direccion": 220,
+        "color": "#ff7f19",
+        "energia": 91.1000000000005,
+        "descanso": 91.1000000000005,
+        "rol": "DETECTIVE",
+        "inventario": [
+            {
+                "posx": 555,
+                "posy": 382,
+                "color": "#8ca165"
+            },
+            {
+                "posx": 556,
+                "posy": 168,
+                "color": "#8aa0b7"
+            }
+        ],
+        "logros": {
+            "logros": {
+                "Primer Logro": "Has completado tu primera mision."
+            }
+        }
+    },
+    {
+        "posx": 658.0073564730654,
+        "posy": 605.8503568482747,
+        "radio": 20,
+        "direccion": 318,
+        "color": "#3ae3ce",
+        "energia": 91.1000000000005,
+        "descanso": 91.1000000000005,
+        "rol": "IMPOSTOR",
+        "inventario": [
+            {
+                "posx": 655,
+                "posy": 196,
+                "color": "#241640"
+            },
+            {
+                "posx": 610,
+                "posy": 591,
+                "color": "#dc7320"
+            }
+        ],
+        "logros": {
+            "logros": {
+                "Primer Logro": "Has completado tu primera mision."
+            }
+        }
+    }
+]
