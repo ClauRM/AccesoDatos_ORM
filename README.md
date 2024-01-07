@@ -8,3 +8,6 @@ https://youtu.be/n8xUWZX4x9Q
 
 Enlace a video explicativo guardando propiedades en bd sqlite3:
 https://youtu.be/vh4cC5gIiF4
+
+Enlace a video explicativo guardando más propiedades en tabla relacional bd sqlite3:
+https://youtu.be/ysu0pCpuTWI
