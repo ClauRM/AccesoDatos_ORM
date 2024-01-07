@@ -165,10 +165,6 @@ def guardarPersonas():
             cursor.execute('INSERT INTO recogibles VALUES (NULL,?,?,?,?)',
                            (persona.entidad, str(persona.posx), str(persona.posy),
                             str(persona.color))) 
-        for logro in persona.logros:
-            cursor.execute('INSERT INTO logros VALUES (NULL,?,?,?)',
-                           (persona.entidad, str(persona.posx), str(persona.posy),
-                            str(persona.color)))
     conexion.commit()
     conexion.close()
 
